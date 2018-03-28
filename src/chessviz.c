@@ -13,7 +13,7 @@ int main()
 	for(int i = 0; i < 16; i++)
 		set_pawn(&pawns[i], &board_e);
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 7; i >= 0; i--)
 	{
 		for (int j = 0; j < 8; j++)
 		{
@@ -35,7 +35,7 @@ int main()
 	for(int i = 0; i < 16; i++)
 		set_pawn(&pawns[i], &board_e);
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 7; i >= 0; i--)
 	{
 		for (int j = 0; j < 8; j++)
 		{
