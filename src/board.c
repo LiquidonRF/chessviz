@@ -56,6 +56,10 @@ int get_move_pawn(pawn *pawn, char x, char y)
 					get_move(&pawn->p, x, y);
 					return 0;
 				}
+				if ((pawn->p.y - y) == 1){							//Движение на 2 клетки
+					get_move(&pawn->p, x, y);
+					return 0;
+				}
 			} else {
 				if ((y - pawn->p.y) == 1){							//Движение на одну клетку
 					get_move(&pawn->p, x, y);
