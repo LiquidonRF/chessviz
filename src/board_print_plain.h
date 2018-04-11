@@ -1,6 +1,8 @@
 #ifndef BOARD_PRINT_PLAIN_H
 #define BOARD_PRINT_PLAIN_H
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 #include "board.h"
 
 typedef struct{
