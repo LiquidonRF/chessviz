@@ -1,4 +1,4 @@
-compile_flags = -Wall -Werror
+compile_flags = -Wall -Werror -std=c99
 
 ./bin/chessviz: ./build/main.o ./build/board.o ./build/board_print_plain.o
 	gcc $(compile_flags) -o ./bin/chessviz ./build/main.o ./build/board.o ./build/board_print_plain.o
