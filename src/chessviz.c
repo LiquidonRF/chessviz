@@ -21,4 +21,5 @@ int main()
 
 		board_print(&board_e, pawns);
 	}
+	return 0;
 }
