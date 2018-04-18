@@ -22,4 +22,6 @@ int get_move_pawn(pawn *, char, char);
 
 pawn *search_pawn(char, char, pawn *);
 
+int is_piece_in_coord(char x, char y, pawn *pawns);
+
 #endif

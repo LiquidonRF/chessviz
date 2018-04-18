@@ -6,8 +6,7 @@ pawn *pawn_init()
 
 	char key = 'a';
 
-	for (int i = 0; i < 16; i+=2)
-	{
+	for (int i = 0; i < 16; i+=2) {
 		pawns[i].color = 0;
 		pawns[i + 1].color = 1;
 		pawns[i].p.y = '7';
@@ -73,11 +72,18 @@ int get_move_pawn(pawn *pawn, char x, char y)
 
 pawn *search_pawn(char x, char y, pawn *pawns)
 {
-	for (int i = 0; i < 16; i++)
-	{
+	for (int i = 0; i < 16; i++) {
 		if (pawns[i].p.x == x && pawns[i].p.y == y){
 			return &pawns[i];
 		}
 	}
 	return NULL;
+}
+
+int is_piece_in_coord(char x, char y, pawn *pawns)
+{
+	if (search_pawn(x, y, pawns) == NULL)
+		return -1;
+
+	return 0;
 }
