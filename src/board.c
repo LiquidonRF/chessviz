@@ -1,21 +1,21 @@
 #include "board.h"
 
-pawn *pawn_init()
+piece *pieces_init()
 {
-	pawn *pawns = (pawn *)malloc(sizeof(pawn) * 16);
+	piece *pieces = (piece *)malloc(sizeof(pieces) * 16);
 
 	char key = 'a';
 
 	for (int i = 0; i < 16; i+=2) {
-		pawns[i].color = 0;
-		pawns[i + 1].color = 1;
-		pawns[i].p.y = '7';
-		pawns[i + 1].p.y = '2';
-		pawns[i].p.x = key;
-		pawns[i + 1].p.x = key;
+		pieces[i].type = 'p';
+		pieces[i + 1].type = 'P';
+		pieces[i].y = '7';
+		pieces[i + 1].y = '2';
+		pieces[i].x = key;
+		pieces[i + 1].x = key;
 		key++;
 	}
-	return pawns;
+	return pieces;
 }
 
 int get_move(piece *p, char x, char y)
@@ -28,40 +28,40 @@ int get_move(piece *p, char x, char y)
 	return -1;
 }
 
-int get_move_pawn(pawn *pawn, char x, char y)
+int get_move_pawn(piece *pieces, char x, char y)
 {
-	if (pawn->color == 1){											//Для белых
-		if (pawn->p.x == x){
-			if (pawn->p.y == '2'){									//С начальной позиции
-				if ((y - pawn->p.y) == 2){							//Движение на 2 клетки
-					get_move(&pawn->p, x, y);
+	if (isupper(pieces->type)){											//Для белых
+		if (pieces->x == x){
+			if (pieces->y == '2'){									//С начальной позиции
+				if ((y - pieces->y) == 2){							//Движение на 2 клетки
+					get_move(pieces, x, y);
 					return 0;
 				}
-				if ((y - pawn->p.y) == 1){							//Движение на 2 клетки
-					get_move(&pawn->p, x, y);
+				if ((y - pieces->y) == 1){							//Движение на 2 клетки
+					get_move(pieces, x, y);
 					return 0;
 				}
 			} else {
-				if ((y - pawn->p.y) == 1){							//Движение на одну клетку
-					get_move(&pawn->p, x, y);
+				if ((y - pieces->y) == 1){							//Движение на одну клетку
+					get_move(pieces, x, y);
 					return 0;
 				}
 			}
 		}
 	} else {				
-		if (pawn->p.x == x){										//Для черных
-			if (pawn->p.y == '7'){									//С начальной позиции
-				if ((pawn->p.y - y) == 2){  						//Движение на две клетки
-					get_move(&pawn->p, x, y);
+		if (pieces->x == x){										//Для черных
+			if (pieces->y == '7'){									//С начальной позиции
+				if ((pieces->y - y) == 2){  						//Движение на две клетки
+					get_move(pieces, x, y);
 					return 0;
 				}
-				if ((pawn->p.y - y) == 1){							//Движение на 2 клетки
-					get_move(&pawn->p, x, y);
+				if ((pieces->y - y) == 1){							//Движение на 2 клетки
+					get_move(pieces, x, y);
 					return 0;
 				}
 			} else {
-				if ((y - pawn->p.y) == 1){							//Движение на одну клетку
-					get_move(&pawn->p, x, y);
+				if ((y - pieces->y) == 1){							//Движение на одну клетку
+					get_move(pieces, x, y);
 					return 0;
 				}
 			}
@@ -70,20 +70,20 @@ int get_move_pawn(pawn *pawn, char x, char y)
 	return -1;
 }
 
-pawn *search_pawn(char x, char y, pawn *pawns)
+piece *search_piece(char x, char y, piece *pieces)
 {
 	for (int i = 0; i < 16; i++) {
-		if (pawns[i].p.x == x && pawns[i].p.y == y){
-			return &pawns[i];
+		if (pieces[i].x == x && pieces[i].y == y){
+			return &pieces[i];
 		}
 	}
 	return NULL;
 }
 
-int is_piece_in_coord(char x, char y, pawn *pawns)
-{
-	if (search_pawn(x, y, pawns) == NULL)
-		return -1;
+// int is_piece_in_coord(char x, char y, pawn *pawns)
+// {
+// 	if (search_pawn(x, y, pawns) == NULL)
+// 		return -1;
 
-	return 0;
-}
+// 	return 0;
+// }

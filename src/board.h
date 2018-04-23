@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 typedef struct{
 	char x;
@@ -11,19 +12,14 @@ typedef struct{
 	int dead;
 }piece;
 
-typedef struct{
-	piece p;
-	int color;
-}pawn;
-
-pawn *pawn_init();
+piece *pieces_init();
 
 int get_move(piece *, char, char);
 
-int get_move_pawn(pawn *, char, char);
+int get_move_pawn(piece *, char, char);
 
-pawn *search_pawn(char, char, pawn *);
+piece *search_piece(char, char, piece *);
 
-int is_piece_in_coord(char x, char y, pawn *pawns);
+//nt is_piece_in_coord(char x, char y, pawn *pawns);
 
 #endif
