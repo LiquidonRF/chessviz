@@ -15,7 +15,7 @@ void board_print(board *board_e, piece *pieces)
 	printf("\033[0;0f");
 	board_init(board_e);
 
-	for(int i = 0; i < 16; i++)
+	for(int i = 0; i < 20; i++)
 		set_piece(&pieces[i], board_e);
 
 	for (int i = 7; i >= 0; i--) {

@@ -22,6 +22,8 @@ piece *search_piece(char, char, piece *);
 
 int get_move_rook(char, char, piece *, piece *);
 
+int get_turn(piece *pieces, int turn);
+
 //nt is_piece_in_coord(char x, char y, pawn *pawns);
 
 #endif
