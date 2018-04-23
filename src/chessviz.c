@@ -17,7 +17,7 @@ int main()
 		printf("Enter move: ");
 		scanf("%s", turn);
 
-		int flag = get_move_pawn(search_piece(turn[0], turn[1], pieces), turn[2], turn[3]);
+		int flag = get_move_pawn(pieces ,search_piece(turn[0], turn[1], pieces), turn[2], turn[3]);
 		printf("%d\n", flag);
 
 		board_print(&board_e, pieces);

@@ -18,51 +18,51 @@ piece *pieces_init()
 	return pieces;
 }
 
-int get_move(piece *p, char x, char y)
+void get_move(piece *p, char x, char y)
 {
-	if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
 		p->x = x;
 		p->y = y;
-		return 0;
-	}
-	return -1;
 }
 
-int get_move_pawn(piece *pieces, char x, char y)
+int get_move_pawn(piece *pieces, piece *pawn, char x, char y)
 {
-	if (isupper(pieces->type)){											//Для белых
-		if (pieces->x == x){
-			if (pieces->y == '2'){									//С начальной позиции
-				if ((y - pieces->y) == 2){							//Движение на 2 клетки
-					get_move(pieces, x, y);
-					return 0;
+	if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
+		if (search_piece(x, y, pieces) == NULL) {
+			if (isupper(pawn->type)) {											//Для белых
+				if (pawn->x == x && y > pawn->y){
+					if (pawn->y == '2'){									//С начальной позиции
+						if ((y - pawn->y) == 2){							//Движение на 2 клетки
+							get_move(pawn, x, y);
+							return 0;
+						}
+						if ((y - pawn->y) == 1){							//Движение на 2 клетки
+							get_move(pawn, x, y);
+							return 0;
+						}
+					} else {
+						if ((y - pawn->y) == 1){							//Движение на одну клетку
+							get_move(pawn, x, y);
+							return 0;
+						}
+					}
 				}
-				if ((y - pieces->y) == 1){							//Движение на 2 клетки
-					get_move(pieces, x, y);
-					return 0;
-				}
-			} else {
-				if ((y - pieces->y) == 1){							//Движение на одну клетку
-					get_move(pieces, x, y);
-					return 0;
-				}
-			}
-		}
-	} else {				
-		if (pieces->x == x){										//Для черных
-			if (pieces->y == '7'){									//С начальной позиции
-				if ((pieces->y - y) == 2){  						//Движение на две клетки
-					get_move(pieces, x, y);
-					return 0;
-				}
-				if ((pieces->y - y) == 1){							//Движение на 2 клетки
-					get_move(pieces, x, y);
-					return 0;
-				}
-			} else {
-				if ((y - pieces->y) == 1){							//Движение на одну клетку
-					get_move(pieces, x, y);
-					return 0;
+			} else {				
+				if (pawn->x == x && y < pawn->y){										//Для черных
+					if (pawn->y == '7'){									//С начальной позиции
+						if ((pawn->y - y) == 2){  						//Движение на две клетки
+							get_move(pawn, x, y);
+							return 0;
+						}
+						if ((pawn->y - y) == 1){							//Движение на 2 клетки
+							get_move(pawn, x, y);
+							return 0;
+						}
+					} else {
+						if ((y - pawn->y) == 1){							//Движение на одну клетку
+							get_move(pawn, x, y);
+							return 0;
+						}
+					}
 				}
 			}
 		}
@@ -78,6 +78,48 @@ piece *search_piece(char x, char y, piece *pieces)
 		}
 	}
 	return NULL;
+}
+
+int get_move_rook(char x, char y, piece *pieces, piece *rook)
+{
+	if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
+		if (rook->x == x) {
+			if (y < rook->y) {
+				for (int i = y - '1'; i <= rook->y - '1'; i++) {
+					if (search_piece(x, i, pieces) != NULL) {
+						return -1;
+					}
+				}
+				get_move(pieces, x, y);
+			} else if (y > rook->y) {
+				for (int i = rook->y - '1'; i <= y - '1'; i++) {
+					if (search_piece(x, i, pieces) != NULL) {
+						return -1;
+					}
+				}
+				get_move(pieces, x, y);
+				return 0;
+			}
+		} else if (rook->y == y) {
+			if (x < rook->x) {
+				for (int i = x - 'a'; i <= rook->x - 'a'; i++) {
+					if (search_piece(i, y, pieces) != NULL) {
+						return -1;
+					}
+				}
+				get_move(pieces, x, y);
+			} else if (x > rook->x) {
+				for (int i = rook->x - 'a'; i <= x - 'a'; i++) {
+					if (search_piece(i, y, pieces) != NULL) {
+						return -1;
+					}
+				}
+				get_move(pieces, x, y);
+				return 0;
+			}
+		}
+	}
+	return -1;
 }
 
 // int is_piece_in_coord(char x, char y, pawn *pawns)
