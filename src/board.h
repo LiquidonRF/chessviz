@@ -7,6 +7,8 @@
 typedef struct{
 	char x;
 	char y;
+	char type;
+	int dead;
 }piece;
 
 typedef struct{
