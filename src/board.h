@@ -31,6 +31,8 @@ int get_move_elephant(char x, char y, piece *pieces, piece *elephant);
 
 int get_move_king(char x, char y, piece *pieces, piece *king);
 
+int get_move_queen(char x, char y, piece *pieces, piece *queen);
+
 //nt is_piece_in_coord(char x, char y, pawn *pawns);
 
 #endif

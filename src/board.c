@@ -2,7 +2,7 @@
 
 piece *pieces_init()
 {
-	piece *pieces = (piece *)malloc(sizeof(pieces) * 30);
+	piece *pieces = (piece *)malloc(sizeof(pieces) * 32);
 
 	char key = 'a';
 
@@ -88,6 +88,16 @@ piece *pieces_init()
     pieces[29].x = 'd';
     pieces[29].y = '8';
 
+    pieces[30].type = 'Q';
+    pieces[30].dead = 0;
+    pieces[30].x = 'e';
+    pieces[30].y = '1';
+
+    pieces[31].type = 'q';
+    pieces[31].dead = 0;
+    pieces[31].x = 'e';
+    pieces[31].y = '8';
+
 	return pieces;
 }
 
@@ -134,7 +144,7 @@ int get_move_pawn(piece *pieces, piece *pawn, char x, char y)
 
 piece *search_piece(char x, char y, piece *pieces)
 {
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 32; i++) {
         if (pieces[i].x == x && pieces[i].y == y && pieces[i].dead == 0){
             return &pieces[i];
         }
@@ -256,6 +266,17 @@ int get_turn(piece *pieces, int turn)
 						return -1;
 					return 0;
 				}
+				if (kek->type == 'Q' && turn % 2 == 0) {
+					flag = get_move_queen(x1, y1, pieces, kek);
+					if (flag == -1)
+						return -1;
+					return 0;
+				} else if (kek->type == 'q' && turn % 2 == 1) {
+					flag = get_move_queen(x1, y1, pieces, kek);
+					if (flag == -1)
+						return -1;
+					return 0;
+				}
 			}
 		}
 	}
@@ -328,6 +349,17 @@ int get_move_king(char x, char y, piece *pieces, piece *king)
 			get_move(king, x, y);
 			return 0;
 		}
+	}
+	return -1;
+}
+
+int get_move_queen(char x, char y, piece *pieces, piece *queen)
+{
+	int flag1 = get_move_rook(x, y, pieces, queen);
+	int flag2 = get_move_elephant(x, y, pieces, queen);
+
+	if (flag1 == 0 || flag2 == 0) {
+		return 0;
 	}
 	return -1;
 }
