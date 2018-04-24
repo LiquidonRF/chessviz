@@ -13,7 +13,7 @@ int main()
 	
 	board_print(&board_e, pieces);
 
-	while(end != 1){
+	while(end != -1){
 		int flag = get_turn(pieces, turn);
 
 		printf("%d\n", flag);
@@ -22,6 +22,8 @@ int main()
 
 		if (flag == 0)
 			turn++;
+
+	end = check_end(pieces);
 	}
 	return 0;
 }

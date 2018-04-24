@@ -53,4 +53,8 @@ int elephant_kill(char x, char y, piece *pieces, piece *elephant);
 
 int king_kill(char x, char y, piece *pieces, piece *king);
 
+int queen_kill(char x, char y, piece *pieces, piece *queen);
+
+int check_end(piece *pieces);
+
 #endif

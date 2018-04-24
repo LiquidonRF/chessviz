@@ -222,7 +222,7 @@ int get_turn(piece *pieces, int turn)
             return 0;
             break;
         case 'q':
-            if (get_move_queen(x1, y1, pieces, kek) == -1)
+            if (queen_kill(x1, y1, pieces, kek) == -1)
                 return -1;
             return 0;
             break;
@@ -347,19 +347,15 @@ int rook_check(char x, char y, piece *pieces, piece *rook)
 int horse_check(char x, char y, piece *pieces, piece *horse)
 {
 	if (horse->y + 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
-		get_move(horse, x, y);
 		return 0;
 	}
 	if (horse->y - 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
-		get_move(horse, x, y);
 		return 0;
 	}
 	if (horse->y + 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
-		get_move(horse, x, y);
 		return 0;
 	}
 	if (horse->y - 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
-		get_move(horse, x, y);
 		return 0;
 	}
 	return -1;
@@ -483,6 +479,33 @@ int king_kill(char x, char y, piece *pieces, piece *king)
 			king->y = y;
 			kill->dead = 1;
 			return 0;
+		}
+	}
+	return -1;
+}
+
+int queen_kill(char x, char y, piece *pieces, piece *queen)
+{
+	piece *kill;
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(queen->type) != isupper(kill->type)) {
+		if (elephant_check(x, y, pieces, queen) == 0
+		|| rook_check(x, y, pieces, queen) == 0) {
+			queen->x = x;
+			queen->y = y;
+			kill->dead = 1;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int check_end(piece *pieces)
+{
+	for (int i = 0; i < 36; i++) {
+		if (pieces[i].type == 'K' || pieces[i].type == 'k') {
+			if (pieces[i].dead != 1)
+				return 0;
 		}
 	}
 	return -1;
