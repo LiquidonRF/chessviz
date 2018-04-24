@@ -37,8 +37,16 @@ int pawn_check(piece *pieces, piece *pawn, char x, char y);
 
 int rook_check(char x, char y, piece *pieces, piece *rook);
 
+int horse_check(char x, char y, piece *pieces, piece *horse);
+
+int elephant_check(char x, char y, piece *pieces, piece *elephant);
+
+int king_check(char x, char y, piece *pieces, piece *king);
+
 int pawn_kill(piece *pieces, piece *pawn, char x, char y);
 
 int rook_kill(char x, char y, piece *pieces, piece *rook);
+
+int horse_kill(char x, char y, piece *pieces, piece *horse);
 
 #endif

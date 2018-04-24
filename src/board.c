@@ -2,103 +2,85 @@
 
 piece *pieces_init()
 {
-	piece *pieces = (piece *)malloc(sizeof(pieces) * 32);
+    piece *pieces = (piece *)malloc(sizeof(pieces) * 32);
+    for (int i = 0; i < 32; i++) {
+        pieces[i].dead = 0;
+    }
 
-	char key = 'a';
+    char key = 'a';
 
-	for (int i = 0; i < 16; i += 2) {
-		pieces[i].dead = 0;
-		pieces[i + 1].dead = 0;
-		pieces[i].type = 'p';
-		pieces[i + 1].type = 'P';
-		pieces[i].y = '7';
-		pieces[i + 1].y = '2';
-		pieces[i].x = key;
-		pieces[i + 1].x = key;
-		key++;
-	}
+    for (int i = 0; i < 16; i++) {
+        pieces[i].type = (i < 8) ? 'P' : 'p';
+        pieces[i].y = (i < 8) ? '2' : '7';
+        pieces[i].x = key;
+        key = (key < 'a' + 7) ? key + 1 : 'a';
+    }
 
-	pieces[16].type = 'r';
-    pieces[16].dead = 0;
+    pieces[16].type = 'r';
     pieces[16].x = 'a';
     pieces[16].y = '8';
 
     pieces[17].type = 'R';
-    pieces[17].dead = 0;
     pieces[17].x = 'h';
     pieces[17].y = '1';
 
     pieces[18].type = 'r';
-    pieces[18].dead = 0;
     pieces[18].x = 'h';
     pieces[18].y = '8';
 
     pieces[19].type = 'R';
-    pieces[19].dead = 0;
     pieces[19].x = 'a';
     pieces[19].y = '1';
 
     pieces[20].type = 'h';
-    pieces[20].dead = 0;
     pieces[20].x = 'b';
     pieces[20].y = '8';
 
     pieces[21].type = 'H';
-    pieces[21].dead = 0;
     pieces[21].x = 'g';
     pieces[21].y = '1';
 
     pieces[22].type = 'h';
-    pieces[22].dead = 0;
     pieces[22].x = 'g';
     pieces[22].y = '8';
 
     pieces[23].type = 'H';
-    pieces[23].dead = 0;
     pieces[23].x = 'b';
     pieces[23].y = '1';
 
     pieces[24].type = 'e';
-    pieces[24].dead = 0;
     pieces[24].x = 'c';
     pieces[24].y = '8';
 
     pieces[25].type = 'E';
-    pieces[25].dead = 0;
     pieces[25].x = 'f';
     pieces[25].y = '1';
 
     pieces[26].type = 'e';
-    pieces[26].dead = 0;
     pieces[26].x = 'f';
     pieces[26].y = '8';
 
     pieces[27].type = 'E';
-    pieces[27].dead = 0;
     pieces[27].x = 'c';
     pieces[27].y = '1';
 
     pieces[28].type = 'K';
-    pieces[28].dead = 0;
     pieces[28].x = 'd';
     pieces[28].y = '1';
 
     pieces[29].type = 'k';
-    pieces[29].dead = 0;
     pieces[29].x = 'd';
     pieces[29].y = '8';
 
     pieces[30].type = 'Q';
-    pieces[30].dead = 0;
     pieces[30].x = 'e';
     pieces[30].y = '1';
 
     pieces[31].type = 'q';
-    pieces[31].dead = 0;
     pieces[31].x = 'e';
     pieces[31].y = '8';
 
-	return pieces;
+    return pieces;
 }
 
 void get_move(piece *p, char x, char y)
@@ -111,15 +93,15 @@ int get_move_pawn(piece *pieces, piece *pawn, char x, char y)
 {
     if (search_piece(x, y, pieces) == NULL) {
 
-    int flag = pawn_check(pieces, pawn, x, y);
-    if (flag == -1)
-    	return -1;
+        if (pawn_check(pieces, pawn, x, y) == -1)
+            return -1;
 
-    get_move(pawn, x, y);
-    return 0;
-	}
+        get_move(pawn, x, y);
+        return 0;
+    }
     return -1;
 }
+
 
 piece *search_piece(char x, char y, piece *pieces)
 {
@@ -133,16 +115,14 @@ piece *search_piece(char x, char y, piece *pieces)
 
 int get_move_rook(char x, char y, piece *pieces, piece *rook)
 {
-	if (search_piece(x, y, pieces) == NULL) {
-		int flag = rook_check(x, y, pieces, rook);
+    if (search_piece(x, y, pieces) == NULL) {
+        if (rook_check(x, y, pieces, rook) == -1)
+            return -1;
 
-		if (flag == -1)
-			return -1;
-
-		get_move(rook, x, y);
-		return 0;
-	}
-	return -1;
+        get_move(rook, x, y);
+        return 0;
+    }
+    return -1;
 }
 
 int get_turn(piece *pieces, int turn)
@@ -243,10 +223,12 @@ int get_turn(piece *pieces, int turn)
 			if (x1 <= 'h' && x1 >= 'a' && y1 <= '8' && y1 >= '1'){
 				piece *kek = search_piece(x, y, pieces);
 				if (kek->type == 'P' || kek->type == 'p') {
-					int flag = pawn_kill(pieces, kek, x1, y1);
-					if (flag == -1)
-						return -1;
-					return 0;
+					if (pawn_kill(pieces, kek, x1, y1) == 0)
+						return 0;
+				}
+				if (kek->type == 'R' || kek->type == 'r') {
+					if (rook_kill(x1, y1, pieces, kek))
+						return 0;
 				}
 			}
 		}
@@ -257,19 +239,8 @@ int get_turn(piece *pieces, int turn)
 int get_move_horse(char x, char y, piece *pieces, piece *horse)
 {
 	if (search_piece(x, y, pieces) == NULL) {
-		if (horse->y + 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
-			get_move(horse, x, y);
-			return 0;
-		}
-		if (horse->y - 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
-			get_move(horse, x, y);
-			return 0;
-		}
-		if (horse->y + 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
-			get_move(horse, x, y);
-			return 0;
-		}
-		if (horse->y - 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
+
+		if (horse_check(x, y, pieces, horse) == 0) {
 			get_move(horse, x, y);
 			return 0;
 		}
@@ -281,34 +252,11 @@ int get_move_horse(char x, char y, piece *pieces, piece *horse)
 int get_move_elephant(char x, char y, piece *pieces, piece *elephant)
 {
 	if (search_piece(x, y, pieces) == NULL) {
-        if (abs(elephant->x - x) == abs(elephant->y - y)) {
-        	if (x > elephant->x && y > elephant->y) {
-        		for (int i = elephant->y + 1, j = elephant->x + 1; i <= y; i++, j++) {
-        			if (search_piece(j, i, pieces) != NULL)
-        				return -1;
-        		}
-        	}
-        	if (x < elephant->x && y > elephant->y) {
-        		for (int i = elephant->y + 1, j = elephant->x - 1; i <= y; i++, j--) {
-        			if (search_piece(j, i, pieces) != NULL)
-        				return -1;
-        		}
-        	}
-        	if (x < elephant->x && y < elephant->y) {
-        		for (int i = elephant->y - 1, j = elephant->x - 1; i >= y; i--, j--) {
-        			if (search_piece(j, i, pieces) != NULL)
-        				return -1;
-        		}
-        	}
-        	if (x > elephant->x && y < elephant->y) {
-        		for (int i = elephant->y - 1, j = elephant->x + 1; i >= y; i--, j++) {
-        			if (search_piece(j, i, pieces) != NULL)
-        				return -1;
-        		}
-        	}
-            get_move(elephant, x, y);
-            return 0;
-        }
+
+		if (elephant_check(x, y, pieces, elephant) == 0) {
+			get_move(elephant, x, y);
+        	return 0;
+		}
     }
     return -1;
 }
@@ -316,7 +264,8 @@ int get_move_elephant(char x, char y, piece *pieces, piece *elephant)
 int get_move_king(char x, char y, piece *pieces, piece *king)
 {
 	if (search_piece(x, y, pieces) == NULL) {
-		if (abs(x - king->x) <= 1 && abs(y - king->y) <= 1) {
+
+		if (king_check(x, y, pieces, king) == 0) {
 			get_move(king, x, y);
 			return 0;
 		}
@@ -326,13 +275,11 @@ int get_move_king(char x, char y, piece *pieces, piece *king)
 
 int get_move_queen(char x, char y, piece *pieces, piece *queen)
 {
-	int flag1 = get_move_rook(x, y, pieces, queen);
-	int flag2 = get_move_elephant(x, y, pieces, queen);
-
-	if (flag1 == 0 || flag2 == 0) {
-		return 0;
-	}
-	return -1;
+    if (get_move_rook(x, y, pieces, queen) == 0 
+    || get_move_elephant(x, y, pieces, queen) == 0) {
+        return 0;
+    }
+    return -1;
 }
 
 int pawn_check(piece *pieces, piece *pawn, char x, char y)
@@ -402,6 +349,67 @@ int rook_check(char x, char y, piece *pieces, piece *rook)
 	return -1;
 }
 
+int horse_check(char x, char y, piece *pieces, piece *horse)
+{
+	if (horse->y + 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
+		get_move(horse, x, y);
+		return 0;
+	}
+	if (horse->y - 2 == y && (horse->x + 1 == x || horse->x - 1 == x)) {
+		get_move(horse, x, y);
+		return 0;
+	}
+	if (horse->y + 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
+		get_move(horse, x, y);
+		return 0;
+	}
+	if (horse->y - 1 == y && (horse->x + 2 == x || horse->x - 2 == x)) {
+		get_move(horse, x, y);
+		return 0;
+	}
+	return -1;
+}
+
+int elephant_check(char x, char y, piece *pieces, piece *elephant)
+{
+	if (abs(elephant->x - x) == abs(elephant->y - y)) {
+       	if (x > elephant->x && y > elephant->y) {
+       		for (int i = elephant->y + 1, j = elephant->x + 1; i <= y; i++, j++) {
+       			if (search_piece(j, i, pieces) != NULL)
+       				return -1;
+       		}
+       	}
+       	if (x < elephant->x && y > elephant->y) {
+       		for (int i = elephant->y + 1, j = elephant->x - 1; i <= y; i++, j--) {
+       			if (search_piece(j, i, pieces) != NULL)
+       				return -1;
+       		}
+       	}
+       	if (x < elephant->x && y < elephant->y) {
+       		for (int i = elephant->y - 1, j = elephant->x - 1; i >= y; i--, j--) {
+       			if (search_piece(j, i, pieces) != NULL)
+       				return -1;
+       		}
+       	}
+       	if (x > elephant->x && y < elephant->y) {
+       		for (int i = elephant->y - 1, j = elephant->x + 1; i >= y; i--, j++) {
+       			if (search_piece(j, i, pieces) != NULL)
+       				return -1;
+      		}
+    	}
+        return 0;
+    }
+    return -1;
+}
+
+int king_check(char x, char y, piece *pieces, piece *king)
+{
+	if (abs(x - king->x) <= 1 && abs(y - king->y) <= 1) {
+		return 0;
+	}
+	return -1;
+}
+
 int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 {
 	piece *kill;
@@ -426,5 +434,19 @@ int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 
 int rook_kill(char x, char y, piece *pieces, piece *rook)
 {
+	piece *kill;
+	if ((kill = search_piece(x, y, pieces)) != NULL) {
+		if (rook_check(x, y, pieces, rook) == 0) {
+			rook->x = x;
+			rook->y = y;
+			kill->dead = 1;
+			return 0;
+		}
+	}
 	return -1;
+}
+
+int horse_kill(char x, char y, piece *pieces, piece *horse)
+{
+	
 }
