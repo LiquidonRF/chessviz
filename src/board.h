@@ -33,6 +33,8 @@ int get_move_king(char x, char y, piece *pieces, piece *king);
 
 int get_move_queen(char x, char y, piece *pieces, piece *queen);
 
+int pawn_kill(piece *pieces, piece *pawn, char x, char y);
+
 //nt is_piece_in_coord(char x, char y, pawn *pawns);
 
 #endif
