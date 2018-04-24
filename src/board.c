@@ -110,35 +110,14 @@ void get_move(piece *p, char x, char y)
 int get_move_pawn(piece *pieces, piece *pawn, char x, char y)
 {
     if (search_piece(x, y, pieces) == NULL) {
-        if (pawn->x != x)
-            return -1;
 
-        if (isupper(pawn->type)) {                                            //Для белых
-            if (pawn->y == '2'){                                    //С начальной позиции
-                if ((y - pawn->y) == 2 || (y - pawn->y) == 1){            //Движение на 2 клетки
-                    get_move(pawn, x, y);
-                    return 0;
-                }
-            } else {
-                if ((y - pawn->y) == 1){                            //Движение на одну клетку
-                    get_move(pawn, x, y);
-                    return 0;
-                }
-            }
-        } else {                                                    //Для черных
-            if (pawn->y == '7'){                                    //С начальной позиции
-                if ((pawn->y - y) == 2 || (pawn->y - y) == 1){      //Движение на две клетки
-                    get_move(pawn, x, y);
-                    return 0;
-                }
-            } else {
-                if ((pawn->y - y) == 1){                            //Движение на одну клетку
-                    get_move(pawn, x, y);
-                    return 0;
-                }
-            }
-        }
-    }
+    int flag = pawn_check(pieces, pawn, x, y);
+    if (flag == -1)
+    	return -1;
+
+    get_move(pawn, x, y);
+    return 0;
+	}
     return -1;
 }
 
@@ -154,42 +133,14 @@ piece *search_piece(char x, char y, piece *pieces)
 
 int get_move_rook(char x, char y, piece *pieces, piece *rook)
 {
-	if (rook->x == x) {
-		if (y < rook->y) {
-			for (int i = y - '1'; i < rook->y - '1'; i++) {
-				if (search_piece(x, i + '1', pieces) != NULL) {
-					return -1;
-				}
-			}
-			get_move(rook, x, y);
-			return 0;
-		} else if (y > rook->y) {
-			for (int i = rook->y - '1' + 1; i < y - '1' + 1; i++) {
-				if (search_piece(x, i + '1', pieces) != NULL) {
-					return -1;
-				}
-			}
-			get_move(rook, x, y);
-			return 0;
-		}
-	} else if (rook->y == y) {
-		if (x < rook->x) {
-			for (int i = x - 'a'; i < rook->x - 'a'; i++) {
-				if (search_piece(i + 'a', y, pieces) != NULL) {
-					return -1;
-				}
-			}
-			get_move(rook, x, y);
-			return 0;
-		} else if (x > rook->x) {
-			for (int i = rook->x - 'a' + 1; i < x - 'a' + 1; i++) {
-				if (search_piece(i + 'a', y, pieces) != NULL) {
-					return -1;
-				}
-			}
-			get_move(rook, x, y);
-			return 0;
-		}
+	if (search_piece(x, y, pieces) == NULL) {
+		int flag = rook_check(x, y, pieces, rook);
+
+		if (flag == -1)
+			return -1;
+
+		get_move(rook, x, y);
+		return 0;
 	}
 	return -1;
 }
@@ -384,6 +335,73 @@ int get_move_queen(char x, char y, piece *pieces, piece *queen)
 	return -1;
 }
 
+int pawn_check(piece *pieces, piece *pawn, char x, char y)
+{
+	if (pawn->x != x)
+            return -1;
+
+	if (isupper(pawn->type)) {                                            //Для белых
+        if (pawn->y == '2'){                                    //С начальной позиции
+            if ((y - pawn->y) == 2 || (y - pawn->y) == 1){            //Движение на 2 клетки
+                return 0;
+            }
+        } else {
+            if ((y - pawn->y) == 1){                            //Движение на одну клетку
+                return 0;
+            }
+        }
+    } else {                                                    //Для черных
+        if (pawn->y == '7'){                                    //С начальной позиции
+            if ((pawn->y - y) == 2 || (pawn->y - y) == 1){      //Движение на две клетки
+                return 0;
+            }
+        } else {
+            if ((pawn->y - y) == 1){                            //Движение на одну клетку
+                return 0;
+            }
+        }
+    }
+    return -1;
+}
+
+int rook_check(char x, char y, piece *pieces, piece *rook)
+{
+	if (rook->x == x) {
+		if (y < rook->y) {
+			for (int i = y + 1; i < rook->y; i++) {
+				if (search_piece(x, i, pieces) != NULL) {
+					return -1;
+				}
+			}
+			return 0;
+		} else if (y > rook->y) {
+			for (int i = rook->y + 1; i < y; i++) {
+				if (search_piece(x, i, pieces) != NULL) {
+					return -1;
+				}
+			}
+			return 0;
+		}
+	} else if (rook->y == y) {
+		if (x < rook->x) {
+			for (int i = x + 1; i < rook->x; i++) {
+				if (search_piece(i, y, pieces) != NULL) {
+					return -1;
+				}
+			}
+			return 0;
+		} else if (x > rook->x) {
+			for (int i = rook->x + 1; i < x; i++) {
+				if (search_piece(i, y, pieces) != NULL) {
+					return -1;
+				}
+			}
+			return 0;
+		}
+	}
+	return -1;
+}
+
 int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 {
 	piece *kill;
@@ -403,5 +421,10 @@ int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 			}
 		}
 	}
+	return -1;
+}
+
+int rook_kill(char x, char y, piece *pieces, piece *rook)
+{
 	return -1;
 }
