@@ -132,14 +132,13 @@ int get_turn(piece *pieces, int turn)
     scanf("%s", command);
 
     char x, y, x1, y1;
+    x = command[0];
+    y = command[1];
+
     if (command[2] != 'x') {
-        x = command[0];
-        y = command[1];
         x1 = command[2];
         y1 = command[3];
     } else if(command[2] == 'x'){
-        x = command[0];
-        y = command[1];
         x1 = command[3];
         y1 = command[4];
     }
@@ -218,7 +217,7 @@ int get_turn(piece *pieces, int turn)
             return 0;
             break;
         case 'k':
-            if (get_move_king(x1, y1, pieces, kek) == -1)
+            if (king_kill(x1, y1, pieces, kek) == -1)
                 return -1;
             return 0;
             break;
@@ -231,141 +230,6 @@ int get_turn(piece *pieces, int turn)
     }
     return -1;
 }
-
-// int get_turn(piece *pieces, int turn)
-// {
-// 	char command[10];
-// 	printf("Enter turn: ");
-// 	scanf("%s", command);
-// 	piece *kek;
-
-// 	if (command[2] != 'x') {
-// 		char x = command[0];
-// 		char y = command[1];
-// 		char x1 = command[2];
-// 		char y1 = command[3];
-// 		int flag = 0;
-
-// 		if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
-// 			if (x1 <= 'h' && x1 >= 'a' && y1 <= '8' && y1 >= '1'){
-// 				kek = search_piece(x, y, pieces);
-// 				if (kek != NULL) {
-// 					printf("check\n");
-// 					if (kek->type == 'P' && turn % 2 == 0) {
-// 						flag = get_move_pawn(pieces, kek, x1, y1);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'p' && turn % 2 == 1) {
-// 						flag = get_move_pawn(pieces, kek, x1, y1);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 					if (kek->type == 'R' && turn % 2 == 0) {
-// 						flag = get_move_rook(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'r' && turn % 2 == 1) {
-// 						flag = get_move_rook(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 					if (kek->type == 'H' && turn % 2 == 0) {
-// 						flag = get_move_horse(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'h' && turn % 2 == 1) {
-// 						flag = get_move_horse(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 					if (kek->type == 'E' && turn % 2 == 0) {
-// 						flag = get_move_elephant(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'e' && turn % 2 == 1) {
-// 						flag = get_move_elephant(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 					if (kek->type == 'K' && turn % 2 == 0) {
-// 						flag = get_move_king(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'k' && turn % 2 == 1) {
-// 						flag = get_move_king(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 					if (kek->type == 'Q' && turn % 2 == 0) {
-// 						flag = get_move_queen(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					} else if (kek->type == 'q' && turn % 2 == 1) {
-// 						flag = get_move_queen(x1, y1, pieces, kek);
-// 						if (flag == -1)
-// 							return -1;
-// 						return 0;
-// 					}
-// 				}
-// 			}
-// 		}
-// 	} else if (command[2] == 'x') {
-// 		char x = command[0];
-// 		char y = command[1];
-// 		char x1 = command[3];
-// 		char y1 = command[4];
-
-// 		if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
-// 			if (x1 <= 'h' && x1 >= 'a' && y1 <= '8' && y1 >= '1'){
-// 				kek = search_piece(x, y, pieces);
-// 				if (kek->type == 'P' && turn % 2 == 0) {
-// 					if (pawn_kill(pieces, kek, x1, y1) == 0)
-// 						return 0;
-// 				}
-// 				if (kek->type == 'p' && turn % 2 == 1) {
-// 					if (pawn_kill(pieces, kek, x1, y1) == 0)
-// 						return 0;
-// 				}
-// 				if (kek->type == 'R' && turn % 2 == 0) {
-// 					if (rook_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 				if (kek->type == 'r' && turn % 2 == 1) {
-// 					if (rook_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 				if (kek->type == 'H' && turn % 2 == 0) {
-// 					if (horse_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 				if (kek->type == 'h' && turn % 2 == 1) {
-// 					if (horse_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 				if (kek->type == 'E' && turn % 2 == 0) {
-// 					if (elephant_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 				if (kek->type == 'e' && turn % 2 == 1) {
-// 					if (elephant_kill(x1, y1, pieces, kek))
-// 						return 0;
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return -1;
-// }
 
 int get_move_horse(char x, char y, piece *pieces, piece *horse)
 {
@@ -505,25 +369,25 @@ int elephant_check(char x, char y, piece *pieces, piece *elephant)
 {
 	if (abs(elephant->x - x) == abs(elephant->y - y)) {
        	if (x > elephant->x && y > elephant->y) {
-       		for (int i = elephant->y + 1, j = elephant->x + 1; i <= y; i++, j++) {
+       		for (int i = elephant->y + 1, j = elephant->x + 1; i < y; i++, j++) {
        			if (search_piece(j, i, pieces) != NULL)
        				return -1;
        		}
        	}
        	if (x < elephant->x && y > elephant->y) {
-       		for (int i = elephant->y + 1, j = elephant->x - 1; i <= y; i++, j--) {
+       		for (int i = elephant->y + 1, j = elephant->x - 1; i < y; i++, j--) {
        			if (search_piece(j, i, pieces) != NULL)
        				return -1;
        		}
        	}
        	if (x < elephant->x && y < elephant->y) {
-       		for (int i = elephant->y - 1, j = elephant->x - 1; i >= y; i--, j--) {
+       		for (int i = elephant->y - 1, j = elephant->x - 1; i > y; i--, j--) {
        			if (search_piece(j, i, pieces) != NULL)
        				return -1;
        		}
        	}
        	if (x > elephant->x && y < elephant->y) {
-       		for (int i = elephant->y - 1, j = elephant->x + 1; i >= y; i--, j++) {
+       		for (int i = elephant->y - 1, j = elephant->x + 1; i > y; i--, j++) {
        			if (search_piece(j, i, pieces) != NULL)
        				return -1;
       		}
@@ -544,7 +408,8 @@ int king_check(char x, char y, piece *pieces, piece *king)
 int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 {
 	piece *kill;
-	if ((kill = search_piece(x, y, pieces)) != NULL) {
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(pawn->type) != isupper(kill->type)) {
 		if (abs(x - pawn->x) == 1) {
 			if (isupper(pawn->type) && y - pawn->y == 1) {
 				pawn->x = x;
@@ -566,7 +431,8 @@ int pawn_kill(piece *pieces, piece *pawn, char x, char y)
 int rook_kill(char x, char y, piece *pieces, piece *rook)
 {
 	piece *kill;
-	if ((kill = search_piece(x, y, pieces)) != NULL) {
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(rook->type) != isupper(kill->type)) {
 		if (rook_check(x, y, pieces, rook) == 0) {
 			rook->x = x;
 			rook->y = y;
@@ -580,7 +446,8 @@ int rook_kill(char x, char y, piece *pieces, piece *rook)
 int horse_kill(char x, char y, piece *pieces, piece *horse)
 {
 	piece *kill;
-	if ((kill = search_piece(x, y, pieces)) != NULL) {
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(horse->type) != isupper(kill->type)) {
 		if (horse_check(x, y, pieces, horse) == 0) {
 			horse->x = x;
 			horse->y = y;
@@ -594,10 +461,26 @@ int horse_kill(char x, char y, piece *pieces, piece *horse)
 int elephant_kill(char x, char y, piece *pieces, piece *elephant)
 {
 	piece *kill;
-	if ((kill = search_piece(x, y, pieces)) != NULL) {
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(elephant->type) != isupper(kill->type)) {
 		if (elephant_check(x, y, pieces, elephant) == 0) {
 			elephant->x = x;
 			elephant->y = y;
+			kill->dead = 1;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int king_kill(char x, char y, piece *pieces, piece *king)
+{
+	piece *kill;
+	if ((kill = search_piece(x, y, pieces)) != NULL
+	&& isupper(king->type) != isupper(kill->type)) {
+		if (king_check(x, y, pieces, king) == 0) {
+			king->x = x;
+			king->y = y;
 			kill->dead = 1;
 			return 0;
 		}

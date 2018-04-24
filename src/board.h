@@ -51,4 +51,6 @@ int horse_kill(char x, char y, piece *pieces, piece *horse);
 
 int elephant_kill(char x, char y, piece *pieces, piece *elephant);
 
+int king_kill(char x, char y, piece *pieces, piece *king);
+
 #endif
