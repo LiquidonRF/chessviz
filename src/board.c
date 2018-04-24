@@ -130,13 +130,13 @@ int get_turn(piece *pieces, int turn)
 	char command[10];
 	printf("Enter turn: ");
 	scanf("%s", command);
+	piece *kek;
 
 	if (command[2] != 'x') {
 		char x = command[0];
 		char y = command[1];
 		char x1 = command[2];
 		char y1 = command[3];
-		piece *kek;
 		int flag = 0;
 
 		if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
@@ -221,13 +221,37 @@ int get_turn(piece *pieces, int turn)
 
 		if (x <= 'h' && x >= 'a' && y <= '8' && y >= '1'){
 			if (x1 <= 'h' && x1 >= 'a' && y1 <= '8' && y1 >= '1'){
-				piece *kek = search_piece(x, y, pieces);
-				if (kek->type == 'P' || kek->type == 'p') {
+				kek = search_piece(x, y, pieces);
+				if (kek->type == 'P' && turn % 2 == 0) {
 					if (pawn_kill(pieces, kek, x1, y1) == 0)
 						return 0;
 				}
-				if (kek->type == 'R' || kek->type == 'r') {
+				if (kek->type == 'p' && turn % 2 == 1) {
+					if (pawn_kill(pieces, kek, x1, y1) == 0)
+						return 0;
+				}
+				if (kek->type == 'R' && turn % 2 == 0) {
 					if (rook_kill(x1, y1, pieces, kek))
+						return 0;
+				}
+				if (kek->type == 'r' && turn % 2 == 1) {
+					if (rook_kill(x1, y1, pieces, kek))
+						return 0;
+				}
+				if (kek->type == 'H' && turn % 2 == 0) {
+					if (horse_kill(x1, y1, pieces, kek))
+						return 0;
+				}
+				if (kek->type == 'h' && turn % 2 == 1) {
+					if (horse_kill(x1, y1, pieces, kek))
+						return 0;
+				}
+				if (kek->type == 'E' && turn % 2 == 0) {
+					if (elephant_kill(x1, y1, pieces, kek))
+						return 0;
+				}
+				if (kek->type == 'e' && turn % 2 == 1) {
+					if (elephant_kill(x1, y1, pieces, kek))
 						return 0;
 				}
 			}
@@ -448,5 +472,28 @@ int rook_kill(char x, char y, piece *pieces, piece *rook)
 
 int horse_kill(char x, char y, piece *pieces, piece *horse)
 {
-	
+	piece *kill;
+	if ((kill = search_piece(x, y, pieces)) != NULL) {
+		if (horse_check(x, y, pieces, horse) == 0) {
+			horse->x = x;
+			horse->y = y;
+			kill->dead = 1;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int elephant_kill(char x, char y, piece *pieces, piece *elephant)
+{
+	piece *kill;
+	if ((kill = search_piece(x, y, pieces)) != NULL) {
+		if (elephant_check(x, y, pieces, elephant) == 0) {
+			elephant->x = x;
+			elephant->y = y;
+			kill->dead = 1;
+			return 0;
+		}
+	}
+	return -1;
 }
