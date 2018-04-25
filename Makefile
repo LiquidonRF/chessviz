@@ -14,11 +14,14 @@ build/board.o: src/board.c
 build/board_print_plain.o: src/board_print_plain.c
 	gcc $(compile_flags) -o build/board_print_plain.o -c src/board_print_plain.c
 
-bin/test: build/test.o build/board.o build/board_print_plain.o
-	gcc $(compile_flags) -o bin/test build/test.o build/board.o build/board_print_plain.o
+bin/test: build/test.o build/first_test.o build/board.o build/board_print_plain.o
+	gcc $(compile_flags) -o bin/test build/test.o build/first_test.o build/board.o build/board_print_plain.o
 
 build/test.o: test/test.c
-	gcc $(compile_flags) -o build/test.o -c test/test.c -I thirdparty src
+	gcc $(compile_flags) -o build/test.o -c test/test.c -Ithirdparty -Isrc
+
+build/first_test.o: test/first_test.c
+	gcc $(compile_flags) -o build/first_test.o -c test/first_test.c -Ithirdparty -Isrc
 
 .PHONY: clean adddir open gdb
 adddir:
