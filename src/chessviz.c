@@ -5,22 +5,25 @@
 
 int main()
 {
+	int turn = 0;
 	board board_e; 
-	pawn *pawns = pawn_init();
+	piece *pieces = pieces_init();
 
-	char turn[4];
 	int end = 0;
 	
-	board_print(&board_e, pawns);
+	board_print(&board_e, pieces);
 
-	while(end != 1){
-		printf("Enter move: ");
-		scanf("%s", turn);
+	while(end != -1){
+		int flag = get_turn(pieces, turn);
 
-		int flag = get_move_pawn(search_pawn(turn[0], turn[1], pawns), turn[2], turn[3]);
 		printf("%d\n", flag);
 
-		board_print(&board_e, pawns);
+		board_print(&board_e, pieces);
+
+		if (flag == 0)
+			turn++;
+
+	end = check_end(pieces);
 	}
 	return 0;
 }
